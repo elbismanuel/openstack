@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Único del Ciudadano - Stack Tecnológico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        * {
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .bg-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .reflection {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(45deg);
+            pointer-events: none;
+            z-index: -1;
+            animation: reflect 15s linear infinite;
+        }
+
+        @keyframes reflect {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .tech-card {
+            transition: transform 0.3s ease;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+        }
+
+        #evolutionChart {
+            width: 100%;
+            height: 500px;
+        }
+
+        .evolution-legend {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .timeline-phase {
+            border-left: 4px solid #818cf8;
+            padding-left: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .timeline-phase::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: #818cf8;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen p-8">
+    <div class="reflection"></div>
+    
+    <div class="max-w-7xl mx-auto">
+        <!-- Encabezado -->
+        <div class="text-center mb-12 bg-glass rounded-xl p-8">
+            <h1 class="text-4xl font-bold text-indigo-900 mb-4">Portal Único del Ciudadano</h1>
+            <p class="text-lg text-gray-700 max-w-3xl mx-auto">
+                Sistema integral para la digitalización y automatización de trámites gubernamentales,
+                facilitando la interacción entre ciudadanos y entidades públicas a través de una
+                plataforma moderna y accesible.
+            </p>
+        </div>
+
+        <!-- Grid de tecnologías -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <!-- Frontend -->
+            <div class="tech-card bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-purple-600 p-4 text-white">
+                    <div class="flex items-center gap-3">
+                        <span class="p-2 bg-white/20 rounded-lg">
+                            <i class="fas fa-laptop-code"></i>
+                        </span>
+                        <h2 class="text-xl font-bold">Frontend</h2>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col items-center p-4 rounded-lg bg-purple-50 hover:bg-purple-100 cursor-pointer"
+                             onclick="showTechDetails('reactjs')">
+                            <i class="fab fa-react text-4xl text-purple-600"></i>
+                            <span class="mt-2 font-medium">React JS</span>
+                            <span class="text-sm text-gray-600 text-center mt-1">Portal web</span>
+                        </div>
+                        <div class="flex flex-col items-center p-4 rounded-lg bg-purple-50 hover:bg-purple-100 cursor-pointer"
+                             onclick="showTechDetails('reactnative')">
+                            <i class="fab fa-react text-4xl text-purple-600"></i>
+                            <span class="mt-2 font-medium">React Native</span>
+                            <span class="text-sm text-gray-600 text-center mt-1">App móvil</span>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-600">
+                        Interfaces modernas y responsivas para acceso web y móvil.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Backend -->
+            <div class="tech-card bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-blue-600 p-4 text-white">
+                    <div class="flex items-center gap-3">
+                        <span class="p-2 bg-white/20 rounded-lg">
+                            <i class="fas fa-server"></i>
+                        </span>
+                        <h2 class="text-xl font-bold">Backend</h2>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col items-center p-4 rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer"
+                             onclick="showTechDetails('appwrite')">
+                            <i class="fas fa-cloud text-4xl text-blue-600"></i>
+                            <span class="mt-2 font-medium">AppWrite</span>
+                            <span class="text-sm text-gray-600 text-center mt-1">BaaS</span>
+                        </div>
+                        <div class="flex flex-col items-center p-4 rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer"
+                             onclick="showTechDetails('springboot')">
+                            <i class="fas fa-leaf text-4xl text-blue-600"></i>
+                            <span class="mt-2 font-medium">Spring Boot</span>
+                            <span class="text-sm text-gray-600 text-center mt-1">Microservicios</span>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-600">
+                        Infraestructura robusta para gestión de trámites.
+                    </p>
+                </div>
+            </div>
+<!-- Base de Datos -->
+<div class="tech-card bg-white rounded-xl shadow-lg overflow-hidden">
+	<div class="bg-green-600 p-4 text-white">
+			<div class="flex items-center gap-3">
+					<span class="p-2 bg-white/20 rounded-lg">
+							<i class="fas fa-database"></i>
+					</span>
+					<h2 class="text-xl font-bold">Base de Datos</h2>
+			</div>
+	</div>
+	<div class="p-6">
+			<div class="grid grid-cols-2 gap-4">
+					<div class="flex flex-col items-center p-4 rounded-lg bg-green-50 hover:bg-green-100 cursor-pointer"
+							 onclick="showTechDetails('postgresql')">
+							<i class="fas fa-database text-4xl text-green-600"></i>
+							<span class="mt-2 font-medium">PostgreSQL</span>
+							<span class="text-sm text-gray-600 text-center mt-1">Base de datos principal</span>
+					</div>
+					<div class="flex flex-col items-center p-4 rounded-lg bg-green-50 hover:bg-green-100 cursor-pointer"
+							 onclick="showTechDetails('postgresql')">
+							<i class="fas fa-database text-4xl text-green-600"></i>
+							<span class="mt-2 font-medium">MySQL</span>
+							<span class="text-sm text-gray-600 text-center mt-1">Base de datos secundaria</span>
+					</div>
+			</div>
+			<p class="mt-4 text-sm text-gray-600">
+					Almacenamiento seguro y eficiente de datos.
+			</p>
+	</div>
+</div>
+
+<!-- Automatización -->
+<div class="tech-card bg-white rounded-xl shadow-lg overflow-hidden">
+	<div class="bg-orange-500 p-4 text-white">
+			<div class="flex items-center gap-3">
+					<span class="p-2 bg-white/20 rounded-lg">
+							<i class="fas fa-cogs"></i>
+					</span>
+					<h2 class="text-xl font-bold">Automatización</h2>
+			</div>
+	</div>
+	<div class="p-6">
+			<div class="grid grid-cols-2 gap-4">
+					<div class="flex flex-col items-center p-4 rounded-lg bg-orange-50 hover:bg-orange-100 cursor-pointer"
+							 onclick="showTechDetails('n8n')">
+							<i class="fas fa-random text-4xl text-orange-500"></i>
+							<span class="mt-2 font-medium">N8N</span>
+							<span class="text-sm text-gray-600 text-center mt-1">Flujos de trabajo</span>
+					</div>
+					<div class="flex flex-col items-center p-4 rounded-lg bg-orange-50 hover:bg-orange-100 cursor-pointer"
+							 onclick="showTechDetails('appsmith')">
+							<i class="fas fa-tools text-4xl text-orange-500"></i>
+							<span class="mt-2 font-medium">AppSmith</span>
+							<span class="text-sm text-gray-600 text-center mt-1">No-Code</span>
+					</div>
+			</div>
+			<p class="mt-4 text-sm text-gray-600">
+					Automatización de procesos y flujos de trabajo.
+			</p>
+	</div>
+</div>
+
+<!-- IA & No-Code -->
+<div class="tech-card bg-white rounded-xl shadow-lg overflow-hidden">
+	<div class="bg-indigo-600 p-4 text-white">
+			<div class="flex items-center gap-3">
+					<span class="p-2 bg-white/20 rounded-lg">
+							<i class="fas fa-brain"></i>
+					</span>
+					<h2 class="text-xl font-bold">IA & No-Code</h2>
+			</div>
+	</div>
+	<div class="p-6">
+			<div class="grid grid-cols-2 gap-4">
+					<div class="flex flex-col items-center p-4 rounded-lg bg-indigo-50 hover:bg-indigo-100 cursor-pointer"
+							 onclick="showTechDetails('claude')">
+							<i class="fas fa-robot text-4xl text-indigo-600"></i>
+							<span class="mt-2 font-medium">Claude/GPT</span>
+							<span class="text-sm text-gray-600 text-center mt-1">Asistencia IA</span>
+					</div>
+					<div class="flex flex-col items-center p-4 rounded-lg bg-indigo-50 hover:bg-indigo-100 cursor-pointer"
+							 onclick="showTechDetails('prompteng')">
+							<i class="fas fa-magic text-4xl text-indigo-600"></i>
+							<span class="mt-2 font-medium">Prompt</span>
+							<span class="text-sm text-gray-600 text-center mt-1">Generación UI</span>
+					</div>
+			</div>
+			<p class="mt-4 text-sm text-gray-600">
+					Asistencia inteligente y generación de interfaces.
+			</p>
+	</div>
+</div>
+
+<!-- DevOps -->
+<div class="tech-card bg-white rounded-xl shadow-lg overflow-hidden">
+	<div class="bg-red-600 p-4 text-white">
+			<div class="flex items-center gap-3">
+					<span class="p-2 bg-white/20 rounded-lg">
+							<i class="fas fa-code-branch"></i>
+					</span>
+					<h2 class="text-xl font-bold">DevOps</h2>
+			</div>
+	</div>
+	<div class="p-6">
+			<div class="grid grid-cols-2 gap-4">
+					<div class="flex flex-col items-center p-4 rounded-lg bg-red-50 hover:bg-red-100 cursor-pointer"
+							 onclick="showTechDetails('gitlab')">
+							<i class="fab fa-gitlab text-4xl text-red-600"></i>
+							<span class="mt-2 font-medium">GitLab CI/CD</span>
+							<span class="text-sm text-gray-600 text-center mt-1">Integración continua</span>
+					</div>
+					<div class="flex flex-col items-center p-4 rounded-lg bg-red-50 hover:bg-red-100 cursor-pointer"
+							 onclick="showTechDetails('docker')">
+							<i class="fab fa-docker text-4xl text-red-600"></i>
+							<span class="mt-2 font-medium">Docker</span>
+							<span class="text-sm text-gray-600 text-center mt-1">Contenedores</span>
+					</div>
+			</div>
+			<p class="mt-4 text-sm text-gray-600">
+					Despliegue automatizado y gestión de infraestructura.
+			</p>
+	</div>
+</div>
+</div>
+
+<!-- Evolución del Sistema -->
+<div class="bg-glass rounded-xl p-8">
+<h2 class="text-2xl font-bold text-indigo-900 mb-6">Evolución del Sistema (fecha aproximada de inicio enero 2025)</h2>
+<div id="evolutionChart"></div>
+<div class="evolution-legend mt-8">
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+			<div class="timeline-phase">
+					<h3 class="text-xl font-bold text-indigo-900">Fase 1: Arquitectura del sistema (Mes 1)			
+					</h3>
+					<ul class="mt-2 space-y-2 text-gray-700">
+							<li>• Diseñar la arquitectura del sistema (frontend, backend y bases de datos)
+							<li>• Especificar requerimientos funcionales</li>
+							<li>• Crear una interfaz para diseñar formularios</li>
+					</ul>
+			</div>
+			<div class="timeline-phase">
+					<h3 class="text-xl font-bold text-indigo-900">Fase 2: Sistema de generación de formularios (Mes 2-3)</h3>
+					<ul class="mt-2 space-y-2 text-gray-700">
+							<li>• Desarrollo del constructor de formularios</li>
+							<li>• Estructura de base de datos para guardar formularios y sus respuestas</li>
+					</ul>
+			</div>
+			<div class="timeline-phase">
+					<h3 class="text-xl font-bold text-indigo-900">Fase 3: Sistema de Gestión de flujos (Mes 3-4)</h3> 
+					<ul class="mt-2 space-y-2 text-gray-700">
+							<li>• Diseñar una interfaz para configurar pasos del flujo</li>
+							<li>• Integración con el sistema de generación de formularios</li>
+							<li>• Seguimiento del estado de los flujos</li>
+					</ul>
+			</div>
+			<div class="timeline-phase">
+					<h3 class="text-xl font-bold text-indigo-900">Fase 4: Sistema Gestor documental (Mes 4-4.5)</h3>
+					<ul class="mt-2 space-y-2 text-gray-700">	
+							<li>• Integrar funcionalidad para asociar documentos a cada trámite o flujo</li>
+							<li>• Configurar roles y permisos para diferentes niveles de usuarios .</li>
+							<li>• Realizar pruebas del flujo de extremo a extremo con casos simples.</li>
+					</ul>
+			</div>
+	</div>
+</div>
+</div>
+</div>
+
+<!-- Modal -->
+<div id="techModal" class="modal">
+<div class="bg-white max-w-2xl mx-auto mt-20 rounded-xl shadow-lg p-8">
+<div class="flex justify-between items-center mb-6">
+	<div class="flex items-center gap-4">
+			<i id="modalIcon" class="text-2xl"></i>
+			<h2 id="modalTitle" class="text-2xl font-bold"></h2>
+	</div>
+	<button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+			<i class="fas fa-times"></i>
+	</button>
+</div>
+<div id="modalContent" class="prose max-w-none"></div>
+</div>
+</div>
+<script>
+	// Datos de tecnologías y sus descripciones
+	const techDetails = {
+			reactjs: {
+					title: "React JS",
+					icon: "fab fa-react",
+					color: "text-purple-600",
+					content: `
+							<div class="space-y-4">
+									<p class="text-lg">Biblioteca JavaScript para construir interfaces de usuario interactivas y reutilizables.</p>
+									
+									<h3 class="text-xl font-bold text-purple-600">Uso en el Portal Único</h3>
+									<ul class="list-disc pl-5 space-y-2">
+											<li>Desarrollo de formularios dinámicos para trámites</li>
+											<li>Sistema de seguimiento en tiempo real del estado de los trámites</li>
+											<li>Interfaz adaptativa para diferentes dispositivos</li>
+											<li>Implementación de accesibilidad web (WCAG 2.1)</li>
+											<li>Integración con sistemas de autenticación ciudadana</li>
+									</ul>
+
+									<h3 class="text-xl font-bold text-purple-600">Beneficios</h3>
+									<ul class="list-disc pl-5 space-y-2">
+											<li>Mejor experiencia de usuario en trámites digitales</li>
+											<li>Rendimiento optimizado para conexiones lentas</li>
+											<li>Facilidad de mantenimiento y actualización</li>
+											<li>Compatibilidad con múltiples navegadores</li>
+									</ul>
+							</div>
+					`
+			},
+			reactnative: {
+					title: "React Native",
+					icon: "fab fa-react",
+					color: "text-purple-600",
+					content: `
+							<div class="space-y-4">
+									<p class="text-lg">Framework para desarrollo de aplicaciones móviles nativas multiplataforma.</p>
+									
+									<h3 class="text-xl font-bold text-purple-600">Uso en el Portal Único</h3>
+									<ul class="list-disc pl-5 space-y-2">
+											<li>Aplicación móvil para acceso a trámites</li>
+											<li>Notificaciones push sobre el estado de trámites</li>
+											<li>Escáner de documentos y captura de fotos</li>
+											<li>Acceso a datos biométricos para autenticación</li>
+											<li>Modo offline para formularios básicos</li>
+									</ul>
+
+									<h3 class="text-xl font-bold text-purple-600">Beneficios</h3>
+									<ul class="list-disc pl-5 space-y-2">
+											<li>Acceso a trámites desde cualquier lugar</li>
+											<li>Experiencia nativa en iOS y Android</li>
+											<li>Mayor seguridad con autenticación biométrica</li>
+											<li>Reducción de visitas presenciales</li>
+									</ul>
+							</div>
+					`
+			},
+			appwrite: {
+					title: "AppWrite",
+					icon: "fas fa-cloud",
+					color: "text-blue-600",
+					content: `
+							<div class="space-y-4">
+									<p class="text-lg">Backend-as-a-Service (BaaS) open-source para gestión de servicios backend.</p>
+									
+									<h3 class="text-xl font-bold text-blue-600">Uso en el Portal Único</h3>
+									<ul class="list-disc pl-5 space-y-2">
+											<li>Sistema de autenticación y autorización</li>
+											<li>Almacenamiento de documentos y archivos</li>
+											<li>Base de datos en tiempo real para trámites</li>
+											<li>Sistema de notificaciones push</li>
+											<li>APIs REST y GraphQL para integraciones</li>
+									</ul>
+
+									<h3 class="text-xl font-bold text-blue-600">Beneficios</h3>
+									<ul class="list-disc pl-5 space-y-2">
+											<li>Reducción de tiempo de desarrollo</li>
+											<li>Escalabilidad automática</li>
+											<li>Seguridad enterprise-grade</li>
+											<li>Fácil integración con otros sistemas</li>
+									</ul>
+							</div>
+					`
+			},
+			springboot: {
+					title: "Spring Boot",
+					icon: "fas fa-leaf",
+					color: "text-blue-600",
+					content: `
+							<div class="space-y-4">
+									<p class="text-lg">Framework de Java para desarrollo de microservicios y APIs.</p>
+									
+									<h3 class="text-xl font-bold text-blue-600">Uso en el Portal Único</h3>
+									<ul class="list-disc pl-5 space-y-2">
+											<li>Microservicios para procesamiento de trámites</li>
+											<li>Integración con sistemas legacy</li>
+											<li>Validación avanzada de documentos</li>
+											<li>Servicios de reportería y estadísticas</li>
+											<li>APIs para interoperabilidad gubernamental</li>
+									</ul>
+
+									<h3 class="text-xl font-bold text-blue-600">Beneficios</h3>
+									<ul class="list-disc pl-5 space-y-2">
+											<li>Alta disponibilidad y rendimiento</li>
+											<li>Arquitectura escalable y mantenible</li>
+											<li>Integración con sistemas existentes</li>
+											<li>Monitoreo y métricas avanzadas</li>
+									</ul>
+							</div>
+					`
+			},
+			postgresql: {
+					title: "PostgreSQL",
+					icon: "fas fa-database",
+					color: "text-green-600",
+					content: `
+							<div class="space-y-4">
+									<p class="text-lg">Sistema de gestión de base de datos relacional avanzado.</p>
+									
+									<h3 class="text-xl font-bold text-green-600">Uso en el Portal Único</h3>
+									<ul class="list-disc pl-5 space-y-2">
+											<li>Almacenamiento de datos de trámites</li>
+											<li>Gestión de usuarios y permisos</li>
+											<li>Histórico de transacciones</li>
+											<li>Datos estadísticos y reportes</li>
+											<li>Auditoría de cambios</li>
+									</ul>
+
+									<h3 class="text-xl font-bold text-green-600">Beneficios</h3>
+									<ul class="list-disc pl-5 space-y-2">
+											<li>Alta confiabilidad y consistencia</li>
+											<li>Soporte para datos complejos</li>
+											<li>Escalabilidad horizontal</li>
+											<li>Respaldos y recuperación avanzada</li>
+									</ul>
+							</div>
+					`
+			},
+			// [Continuará con más tecnologías...]
+	};
+
+	// Configuración del gráfico de evolución
+	const evolutionChart = echarts.init(document.getElementById('evolutionChart'));
+	const option = {
+			tooltip: {
+					trigger: 'axis',
+					formatter: function(params) {
+							const data = params[0];
+							return `${data.name}<br/>Progreso: ${data.value}%`;
+					}
+			},
+			xAxis: {
+					type: 'category',
+					data: ['Mes 1', 'Mes 2', 'Mes 3', 'Mes 4', '4.5 Meses'],
+					axisLabel: {
+							interval: 0,
+							textStyle: {
+									fontSize: 12
+							}
+					}
+			},
+			yAxis: {
+					type: 'value',
+					max: 100,
+					axisLabel: {
+							formatter: '{value}%'
+					}
+			},
+			series: [{
+					data: [25, 50, 75, 90, 100],
+					type: 'line',
+					smooth: true,
+					symbolSize: 10,
+					lineStyle: {
+							color: '#818cf8',
+							width: 4
+					},
+					areaStyle: {
+							color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+									{
+											offset: 0,
+											color: 'rgba(129, 140, 248, 0.5)'
+									},
+									{
+											offset: 1,
+											color: 'rgba(129, 140, 248, 0.1)'
+									}
+							])
+					},
+					markPoint: {
+							data: [
+									{type: 'max', name: 'Máximo'},
+									{type: 'min', name: 'Mínimo'}
+							]
+					},
+					markLine: {
+							data: [
+									{type: 'average', name: 'Promedio'}
+							]
+					}
+			}]
+	};
+	evolutionChart.setOption(option);
+
+	// Funciones para el modal
+	function showTechDetails(tech) {
+			const modal = document.getElementById('techModal');
+			const details = techDetails[tech];
+			
+			if (details) {
+					document.getElementById('modalTitle').textContent = details.title;
+					document.getElementById('modalIcon').className = `${details.icon} ${details.color} text-4xl`;
+					document.getElementById('modalContent').innerHTML = details.content;
+					
+					modal.style.display = 'block';
+			}
+	}
+
+	function closeModal() {
+			document.getElementById('techModal').style.display = 'none';
+	}
+
+	// Eventos
+	window.onclick = function(event) {
+			const modal = document.getElementById('techModal');
+			if (event.target == modal) {
+					closeModal();
+			}
+	}
+
+	// Responsive
+	window.addEventListener('resize', function() {
+			evolutionChart.resize();
+	});
+</script>
+</body>
+</html>
